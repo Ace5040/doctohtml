@@ -1,4 +1,4 @@
-FROM archlinux
+FROM archlinux/base
 
 RUN pacman --noconfirm -Syu
 RUN pacman --noconfirm -S git npm
