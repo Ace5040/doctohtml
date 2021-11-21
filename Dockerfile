@@ -7,7 +7,7 @@ RUN pip install unoserver
 WORKDIR /doctohtml
 
 RUN git clone https://github.com/ace5040/doctohtml.git .
-WORKDIR /doctohtml/src
+WORKDIR /doctohtml/service
 RUN npm install
 
 ENV SERVER_PORT 3000
