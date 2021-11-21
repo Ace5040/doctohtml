@@ -10,10 +10,6 @@ const server = new Hapi.Server({
 server.route({
   method: 'POST',
   path: '/convert/{format}',
-  timeout: {
-    socket: config.TIMEOUT_SOCKET,
-    server: config.TIMEOUT_SERVER
-  },
   config: {
      payload:{
         output:'stream',
