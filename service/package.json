@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@hapi/boom": "^9.1.4",
+    "@hapi/hapi": "^20.2.1",
+    "uuid": "^8.3.2"
+  }
+}
