@@ -4,7 +4,7 @@ import Hapi from '@hapi/hapi'
 import { spawnSync } from 'child_process'
 const server = new Hapi.Server({
   port: config.SERVER_PORT,
-  host: 'localhost'
+  host: '0.0.0.0'
 })
 
 server.route({
