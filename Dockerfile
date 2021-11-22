@@ -1,12 +1,13 @@
 FROM archlinux:latest
 
 RUN pacman --noconfirm -Syu
-RUN pacman --noconfirm -S git npm python-pip libreoffice-fresh
-RUN pip install unoserver
+RUN pacman --noconfirm -S git npm unoconv
 
 WORKDIR /doctohtml
 
-RUN git clone https://github.com/ace5040/doctohtml.git .
+ARG test002
+
+RUN git clone -b legacy https://github.com/ace5040/doctohtml.git .
 WORKDIR /doctohtml/service
 RUN npm install
 
@@ -18,4 +19,4 @@ ENV TIMEOUT_SOCKET 320000
 
 EXPOSE 3000
 
-ENTRYPOINT unoserver --interface 0.0.0.0 --port 2002 & node service.js
+ENTRYPOINT unoconv --listener --server=0.0.0.0 --port=2002 & node service.js

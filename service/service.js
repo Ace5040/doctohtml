@@ -1,6 +1,8 @@
 'use strict'
 import config from './config.js'
 import Hapi from '@hapi/hapi'
+import { v4 as uuid } from 'uuid'
+import { openSync, writeSync, readSync } from 'fs'
 import { spawnSync } from 'child_process'
 const server = new Hapi.Server({
   port: config.SERVER_PORT,
@@ -29,14 +31,16 @@ server.route({
           data.file.on('data', (chunk) => {
             chunks.push(Buffer.from(chunk))
           })
-          data.file.on('end', () => resolve(Buffer.concat(chunks)));
+          data.file.on('end', () => resolve(Buffer.concat(chunks)))
         })
+        let fd = openSync(uuid, 'w')
+        writeSync(fd, fileContentBuffer)
         if ( fileContentBuffer ) {
-          let proc = spawnSync('unoconvert', ['--convert-to', convertToFormat, '-', '-'], {
-            input: fileContentBuffer
-          })
-          if ( proc.output.length && proc.output[1] ) {
-            response = proc.output[1]
+          spawnSync('unoconv', ['-f', convertToFormat, uuid])
+          let fd2 = openSync(uuid, 'r')
+          let convertedData = readSync(fd2)
+          if ( convertedData.length ) {
+            response = convertedData
           }
         }
       }
