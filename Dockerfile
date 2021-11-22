@@ -5,7 +5,7 @@ RUN pacman --noconfirm -S git npm unoconv
 
 WORKDIR /doctohtml
 
-ARG test002
+ARG test003
 
 RUN git clone -b legacy https://github.com/ace5040/doctohtml.git .
 WORKDIR /doctohtml/service

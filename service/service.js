@@ -2,7 +2,7 @@
 import config from './config.js'
 import Hapi from '@hapi/hapi'
 import { v4 as uuid } from 'uuid'
-import { openSync, writeSync, readSync } from 'fs'
+import { openSync, writeSync, readFileSync, closeSync, unlinkSync } from 'fs'
 import { spawnSync } from 'child_process'
 const server = new Hapi.Server({
   port: config.SERVER_PORT,
@@ -33,15 +33,16 @@ server.route({
           })
           data.file.on('end', () => resolve(Buffer.concat(chunks)))
         })
-        let fd = openSync(uuid, 'w')
+        let filename = uuid()
+        let fd = openSync(filename, 'w')
         writeSync(fd, fileContentBuffer)
-        if ( fileContentBuffer ) {
-          spawnSync('unoconv', ['-f', convertToFormat, uuid])
-          let fd2 = openSync(uuid, 'r')
-          let convertedData = readSync(fd2)
-          if ( convertedData.length ) {
-            response = convertedData
-          }
+        closeSync(fd)
+        spawnSync('unoconv', ['-f', convertToFormat, filename])
+        unlinkSync(filename)
+        let convertedData = readFileSync(filename + '.html')
+        unlinkSync(filename + '.html');
+        if ( convertedData.length ) {
+          response = convertedData
         }
       }
       return response
